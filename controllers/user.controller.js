@@ -1,5 +1,5 @@
 const getProfile = async (req, res, next) => {
-  res.send("User Profile");
+  res.render("profile");
 };
 
 module.exports = { getProfile };

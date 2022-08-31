@@ -1,9 +1,9 @@
 const getLogin = async (req, res, next) => {
-  res.send("Get Login");
+  res.render("login");
 };
 
 const getRegister = async (req, res, next) => {
-  res.send("Get Register");
+  res.render("register");
 };
 
 const getLogout = async (req, res, next) => {
