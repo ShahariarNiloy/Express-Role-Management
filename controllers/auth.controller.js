@@ -1,3 +1,5 @@
+const User = require("../models/user.model");
+
 const getLogin = async (req, res, next) => {
   res.render("login");
 };
@@ -15,7 +17,21 @@ const postLogin = async (req, res, next) => {
 };
 
 const postRegister = async (req, res, next) => {
-  res.send("post Register");
+  try {
+    const { email } = req.body;
+    const doesExist = await User.findOne({ email });
+
+    if (doesExist) {
+      res.redirect("/auth/register");
+      return;
+    }
+
+    const user = new User(req.body);
+    await user.save();
+    res.send(user);
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports = { getLogin, getRegister, postLogin, postRegister, getLogout };
