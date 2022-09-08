@@ -6,20 +6,36 @@ const mongoose = require("mongoose");
 const router = require("./routes/index.route");
 const authRouter = require("./routes/auth.route");
 const userRouter = require("./routes/user.route");
+const session = require("express-session");
+const connectFlash = require("connect-flash");
 
 // initialization
 const app = express();
 const PORT = process.env.PORT || 5000;
-
-// set view engine && public folder
 app.set("view engine", "ejs");
 app.use(express.static("public"));
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-// log statement
 app.use(morgan("dev"));
+
+// Init Session
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      // secure:true,
+      httpOnly: true,
+    },
+  })
+);
+
+app.use(connectFlash());
+app.use((req, res, next) => {
+  req.locals.message = req.flash();
+  next();
+});
 
 // routes
 app.use("/", router);
