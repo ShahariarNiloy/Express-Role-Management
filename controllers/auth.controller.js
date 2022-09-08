@@ -37,7 +37,9 @@ const postRegister = async (req, res, next) => {
 
     if (doesExist) {
       req.flash("warning", "Username/email already exists");
-      res.redirect("/auth/register");
+      res.render("register", {
+        messages: req.flash(),
+      });
       return;
     }
 
