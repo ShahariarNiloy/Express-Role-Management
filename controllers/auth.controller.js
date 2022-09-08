@@ -49,7 +49,9 @@ const postRegister = async (req, res, next) => {
       "success",
       `${user.email} registered successfully, you can now login`
     );
-    res.redirect("/auth/login");
+    res.render("login", {
+      messages: req.flash(),
+    });
   } catch (error) {
     next(error);
   }
