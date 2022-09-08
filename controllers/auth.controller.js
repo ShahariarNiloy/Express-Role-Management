@@ -1,3 +1,4 @@
+const { validationResult } = require("express-validator");
 const User = require("../models/user.model");
 
 const getLogin = async (req, res, next) => {
@@ -18,17 +19,35 @@ const postLogin = async (req, res, next) => {
 
 const postRegister = async (req, res, next) => {
   try {
+    const { errors } = validationResult(req);
+    if (errors.length > 0) {
+      console.log(errors);
+      errors.forEach((error) => {
+        req.flash("error", error.msg);
+      });
+      res.render("register", {
+        email: req.body.email,
+        messages: req.flash(),
+      });
+      return;
+    }
+
     const { email } = req.body;
     const doesExist = await User.findOne({ email });
 
     if (doesExist) {
+      req.flash("warning", "Username/email already exists");
       res.redirect("/auth/register");
       return;
     }
 
     const user = new User(req.body);
     await user.save();
-    res.send(user);
+    req.flash(
+      "success",
+      `${user.email} registered successfully, you can now login`
+    );
+    res.redirect("/auth/login");
   } catch (error) {
     next(error);
   }

@@ -5,6 +5,7 @@ const {
   postRegister,
   getLogout,
 } = require("../controllers/auth.controller");
+const { postRegisterMiddleware } = require("../middleware/auth.middleware");
 
 const authRouter = require("express").Router();
 
@@ -13,6 +14,6 @@ authRouter.get("/register", getRegister);
 authRouter.get("/logout", getLogout);
 
 authRouter.post("/login", postLogin);
-authRouter.post("/register", postRegister);
+authRouter.post("/register", postRegisterMiddleware, postRegister);
 
 module.exports = authRouter;

@@ -33,7 +33,7 @@ app.use(
 
 app.use(connectFlash());
 app.use((req, res, next) => {
-  req.locals.message = req.flash();
+  res.locals.message = req.flash();
   next();
 });
 
