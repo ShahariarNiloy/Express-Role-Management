@@ -9,7 +9,6 @@ const {
   postRegisterMiddleware,
   postLoginMiddleware,
 } = require("../middleware/auth.middleware");
-const passport = require("passport");
 
 const authRouter = require("express").Router();
 

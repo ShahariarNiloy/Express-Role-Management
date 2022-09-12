@@ -1,3 +1,4 @@
+require("passport");
 const { validationResult } = require("express-validator");
 const User = require("../models/user.model");
 
@@ -10,7 +11,12 @@ const getRegister = async (req, res, next) => {
 };
 
 const getLogout = async (req, res, next) => {
-  res.send("Get Logout");
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/");
+  });
 };
 
 const postLogin = async (req, res, next) => {
