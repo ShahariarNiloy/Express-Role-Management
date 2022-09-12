@@ -10,6 +10,7 @@ const session = require("express-session");
 const connectFlash = require("connect-flash");
 const passport = require("passport");
 const { ensureAuthenticated } = require("./middleware/auth.middleware");
+const connectMongo = require("connect-mongo");
 
 // initialization
 const app = express();
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan("dev"));
 
+const MongoStore = require("connect-mongo");
 // Init Session
 app.use(
   session({
@@ -30,6 +32,10 @@ app.use(
       // secure:true,
       httpOnly: true,
     },
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI,
+      mongooseConnection: mongoose.connection,
+    }),
   })
 );
 
