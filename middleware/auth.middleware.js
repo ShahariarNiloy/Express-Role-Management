@@ -1,4 +1,5 @@
 const { body } = require("express-validator");
+const passport = require("passport");
 
 const postRegisterMiddleware = [
   body("email")
@@ -19,4 +20,10 @@ const postRegisterMiddleware = [
   }),
 ];
 
-module.exports = { postRegisterMiddleware };
+const postLoginMiddleware = passport.authenticate("local", {
+  successRedirect: "/user/profile",
+  failureRedirect: "/auth/login",
+  failureFlash: true,
+});
+
+module.exports = { postRegisterMiddleware, postLoginMiddleware };
