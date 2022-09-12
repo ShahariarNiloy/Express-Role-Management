@@ -21,7 +21,7 @@ const postRegisterMiddleware = [
 ];
 
 const postLoginMiddleware = passport.authenticate("local", {
-  successRedirect: "/user/profile",
+  successReturnToOrRedirect: "/",
   failureRedirect: "/auth/login",
   failureFlash: true,
 });

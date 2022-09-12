@@ -9,8 +9,11 @@ const userRouter = require("./routes/user.route");
 const session = require("express-session");
 const connectFlash = require("connect-flash");
 const passport = require("passport");
-const { ensureAuthenticated } = require("./middleware/auth.middleware");
 const connectMongo = require("connect-mongo");
+const connectEnsureLogin = require("connect-ensure-login");
+const { ensureAuthenticated } = require("./middleware/auth.middleware");
+const adminRouter = require("./routes/admin.route");
+const { ensureAdmin } = require("./middleware/role.middleware");
 
 // initialization
 const app = express();
@@ -22,6 +25,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(morgan("dev"));
 
 const MongoStore = require("connect-mongo");
+
 // Init Session
 app.use(
   session({
@@ -58,7 +62,12 @@ app.use((req, res, next) => {
 // routes
 app.use("/", router);
 app.use("/auth", authRouter);
-app.use("/user", ensureAuthenticated, userRouter);
+app.use(
+  "/user",
+  connectEnsureLogin.ensureLoggedIn({ redirectTo: "/auth/login" }),
+  userRouter
+);
+app.use("/admin", ensureAuthenticated, ensureAdmin, adminRouter);
 
 // error status && 404 page not found route handle
 app.use((req, res, next) => {
