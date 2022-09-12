@@ -26,4 +26,24 @@ const postLoginMiddleware = passport.authenticate("local", {
   failureFlash: true,
 });
 
-module.exports = { postRegisterMiddleware, postLoginMiddleware };
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    next();
+  } else {
+    res.redirect("/auth/login");
+  }
+}
+function ensureNotAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    res.redirect("back");
+  } else {
+    next();
+  }
+}
+
+module.exports = {
+  postRegisterMiddleware,
+  postLoginMiddleware,
+  ensureAuthenticated,
+  ensureNotAuthenticated,
+};

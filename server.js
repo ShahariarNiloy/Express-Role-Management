@@ -9,6 +9,7 @@ const userRouter = require("./routes/user.route");
 const session = require("express-session");
 const connectFlash = require("connect-flash");
 const passport = require("passport");
+const { ensureAuthenticated } = require("./middleware/auth.middleware");
 
 // initialization
 const app = express();
@@ -36,6 +37,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 require("./utils/passport.auth");
 
+app.use((req, res, next) => {
+  res.locals.user = req.user;
+  next();
+});
+
 // flash message
 app.use(connectFlash());
 app.use((req, res, next) => {
@@ -46,7 +52,7 @@ app.use((req, res, next) => {
 // routes
 app.use("/", router);
 app.use("/auth", authRouter);
-app.use("/user", userRouter);
+app.use("/user", ensureAuthenticated, userRouter);
 
 // error status && 404 page not found route handle
 app.use((req, res, next) => {

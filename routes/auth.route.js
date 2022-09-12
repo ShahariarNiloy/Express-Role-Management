@@ -8,15 +8,22 @@ const {
 const {
   postRegisterMiddleware,
   postLoginMiddleware,
+  ensureAuthenticated,
+  ensureNotAuthenticated,
 } = require("../middleware/auth.middleware");
 
 const authRouter = require("express").Router();
 
-authRouter.get("/login", getLogin);
-authRouter.get("/register", getRegister);
-authRouter.get("/logout", getLogout);
+authRouter.get("/login", ensureNotAuthenticated, getLogin);
+authRouter.get("/register", ensureNotAuthenticated, getRegister);
+authRouter.get("/logout", ensureAuthenticated, getLogout);
 
-authRouter.post("/login", postLoginMiddleware);
-authRouter.post("/register", postRegisterMiddleware, postRegister);
+authRouter.post("/login", ensureNotAuthenticated, postLoginMiddleware);
+authRouter.post(
+  "/register",
+  ensureNotAuthenticated,
+  postRegisterMiddleware,
+  postRegister
+);
 
 module.exports = authRouter;
